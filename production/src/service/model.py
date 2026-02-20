@@ -9,7 +9,7 @@ from .llm import (
     ClassifierModelCustom,
     CustomModel
 )
-from .translator import TranslatorEnRu, TranslatorRuEn
+# from .translator import TranslatorEnRu, TranslatorRuEn
 from .grouper import Grouper
 
 from utils import VLMModel
@@ -25,8 +25,8 @@ class MasterModel:
         self.classifier_model_custom = ClassifierModelCustom(vlm_model)
         self.custom_model = CustomModel(vlm_model)
 
-        self.translator_ru_en = TranslatorRuEn()
-        self.translator_en_ru = TranslatorEnRu()
+        # self.translator_ru_en = TranslatorRuEn()
+        # self.translator_en_ru = TranslatorEnRu()
 
         self.grouper = Grouper()
 
@@ -53,8 +53,8 @@ class MasterModel:
                 descriptions.append(item.get("description"))
             else:
                 descriptions.append(" ")
-        descriptions_tr = self.translator_en_ru.translate(descriptions)
-        # descriptions_tr = descriptions
+        # descriptions_tr = self.translator_en_ru.translate(descriptions)
+        descriptions_tr = descriptions
         logging.warning(descriptions_tr)
 
         logging.warning("processing::encoding")
@@ -72,8 +72,22 @@ class MasterModel:
                         break
                 elif k == "description":
                     item_n["description"] = descriptions_tr[i]
-            item_n["time_duration"] = "3"
-            item_n["confidence"] = "1"
+                elif k == "duration":
+                    try:
+                        float(v)
+                        item_n["time_duration"] = v
+                    except:
+                        item_n["time_duration"] = "5"
+                elif k == "confidence":
+                    try:
+                        float(v)
+                        item_n["confidence"] = v
+                    except:
+                        item_n["confidence"] = "0.5"
+            if "time_duration" not in item_n:
+                item_n["time_duration"] = "3"
+            if "confidence" not in item_n:
+                item_n["confidence"] = "0.5"
             logging.warning(item_n)
             if item_n.get("time_start") is None:
                 continue
@@ -86,7 +100,7 @@ class MasterModel:
     def parse_video_custom(self, video_filepath: str, description: str):
         logging.warning("starting::parse_video_custom")
 
-        description_tr = self.translator_ru_en.translate([description])[0]
+        # description_tr = self.translator_ru_en.translate([description])[0]
         description_tr = description
         logging.warning("processing::classification")
         flag = self.classifier_model_custom(video_filepath, description_tr)
@@ -105,14 +119,16 @@ class MasterModel:
                 descriptions.append(item.get("description"))
             else:
                 descriptions.append(" ")
-        descriptions_tr = self.translator_en_ru.translate(descriptions)
-        # descriptions_tr = descriptions
+        # descriptions_tr = self.translator_en_ru.translate(descriptions)
+        descriptions_tr = descriptions
         logging.warning(descriptions_tr)
 
         logging.warning("processing::encoding")
         result = list()
         for i, item in enumerate(response):
-            item_n = dict()
+            item_n = {
+                "event_type": "CUSTOM" 
+            }
             for k, v in item.items():
                 if k == "timestamp":
                     try:
@@ -122,8 +138,22 @@ class MasterModel:
                         break
                 elif k == "description":
                     item_n["description"] = descriptions_tr[i]
-            item_n["time_duration"] = "3"
-            item_n["confidence"] = "1"
+                elif k == "duration":
+                    try:
+                        float(v)
+                        item_n["time_duration"] = v
+                    except:
+                        item_n["time_duration"] = "3"
+                elif k == "confidence":
+                    try:
+                        float(v)
+                        item_n["confidence"] = v
+                    except:
+                        item_n["confidence"] = "0.5"
+            if "time_duration" not in item_n:
+                item_n["time_duration"] = "3"
+            if "confidence" not in item_n:
+                item_n["confidence"] = "0.5"
             logging.warning(item_n)
             if item_n.get("time_start") is None:
                 continue

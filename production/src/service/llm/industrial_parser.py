@@ -19,17 +19,23 @@ with timestamp (if available) and a brief description. Focus on the following ca
 
 For each accident you detect, provide:
 1. TIMESTAMP: The exact second when the accident occurs
-2. DESCRIPTION: Brief description of what happens
+2. DURATION: Duration of the event
+3. DESCRIPTION: Brief description of what happens
+4. CONFIDENCE: Your confidence that the event is suitable
 
 In the response, return the following json list:
 [
     {
         "timestamp": "TIMESTAMP_i",
+        "duration": "DURATION_i",
         "description": "DESCRIPTION_i",
+        "confidence": "CONFIDENCE_i"
     }
 ], where 
 "TIMESTAMP_i" - the second at which the ith event started, embed seconds in " symbol;
-"DESCRIPTION_i" - is the description of the ith event, in a few sentences.
+"DURATION_i" - ith event duration in seconds;
+"DESCRIPTION_i" - is the description of the ith event, in a few sentences;
+"CONFIDENCE_i" - confidence score, numerical value from 0 to 1.
 
 Answer constraints:
 - Return only json list. Don't add your comments.

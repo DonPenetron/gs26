@@ -20,20 +20,23 @@ A detailed description of such cases is provided below:
 
 For each accident you detect, provide:
 1. TIMESTAMP: The exact second when the accident occurs
-2. DESCRIPTION: Brief description of what happens
-3. SEVERITY: Minor/Moderate/Severe
+2. DURATION: Duration of the event
+3. DESCRIPTION: Brief description of what happens
+4. CONFIDENCE: Your confidence that the event is suitable
 
 In the response, return the following json list:
 [
     {
         "timestamp": "TIMESTAMP_i",
+        "duration": "DURATION_i",
         "description": "DESCRIPTION_i",
-        "severity": "SEVERITY_i",
+        "confidence": "CONFIDENCE_i"
     }
 ], where 
 "TIMESTAMP_i" - the second at which the ith event started, embed seconds in " symbol;
+"DURATION_i" - ith event duration in seconds;
 "DESCRIPTION_i" - is the description of the ith event, in a few sentences;
-"SEVERITY_i" - is the severity of the outcome of the ith event.
+"CONFIDENCE_i" - confidence score, numerical value from 0 to 1.
 
 Answer constraints:
 - Return only json list. Don't add your comments.

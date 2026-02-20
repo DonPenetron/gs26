@@ -18,6 +18,8 @@ class Grouper:
 
         sequences_dedup = list()
         for seq in sequences:
+            if len(seq) == 0:
+                continue
             first_item = seq[0]
             last_item = seq[-1]
             if first_item["time_start"] == last_item["time_start"]:
@@ -25,6 +27,7 @@ class Grouper:
             else:
                 item_inter = {**first_item}
                 item_inter["time_start"] = first_item["time_start"]
-                item_inter["time_duration"] = (last_item["time_start"] + last_item["time_duration"]) - first_item["time_start"]
+                item_inter["time_duration"] = str((float(last_item["time_start"]) + float(last_item["time_duration"]))
+                                                  - float(first_item["time_start"]))
                 sequences_dedup.append(item_inter)
         return sequences_dedup

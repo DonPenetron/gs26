@@ -8,8 +8,8 @@ import uuid
 from utils import VLMModel, VideoManager, Highlighter
 from service import MasterModel
 
-import torch
-logging.warning(torch.cuda.is_available())
+# import torch
+# logging.warning(torch.cuda.is_available())
 
 VLM_URL = os.environ.get("VLM_URL")
 REDIS_BROKER_URL = os.environ.get("REDIS_BROKER_URL")
@@ -103,11 +103,14 @@ def parse_document_custom_task(task_id: str, video_filename: str, description: s
             r_n["time_start"] = str(float(r_n["time_start"]) + float(item["time_start"]))
             cur_result_n.append(r_n)
 
+        logging.warning("ITEMS")
+        logging.warning(cur_result_n)
         response = requests.post(
             BACKEND_URL_PAYLOAD,
             json=cur_result_n,
             headers={"Content-Type": "application/json"},
         )
+        logging.warning("RESPONSE")
         logging.warning(response.content)
     response = requests.patch(
         f"{BACKEND_URL_FINAL}/{task_id}/status/",

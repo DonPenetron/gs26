@@ -1,6 +1,6 @@
 services:
   worker:
-    image: ml:1.2.5
+    image: ml:1.2.7
     command: celery -A worker worker --concurrency=1 --loglevel=info
     environment:
       # REDIS_BROKER_URL: redis://redis:30379
@@ -15,17 +15,10 @@ services:
       - /root/ML/videos:/video
     networks:
       - app-network
-    shm_size: 8gb
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    # shm_size: 8gb
 
   client:
-    image: ml:1.2.5
+    image: ml:1.2.7
     command: uvicorn client:app --port 30001 --host 0.0.0.0
     environment:
       # REDIS_BROKER_URL: redis://redis:30379
