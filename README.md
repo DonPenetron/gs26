@@ -1,4 +1,4 @@
-docker build -t ml:1.2.7 .
+docker build -t ml:1.2.7 . </br>
 docker compose up
 
 ENDOPOINTS
