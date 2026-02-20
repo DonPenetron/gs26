@@ -1,0 +1,66 @@
+services:
+  worker:
+    image: ml:1.2.5
+    command: celery -A worker worker --concurrency=1 --loglevel=info
+    environment:
+      # REDIS_BROKER_URL: redis://redis:30379
+      # REDIS_BACKEND_URL: redis://redis:30379
+      REDIS_BROKER_URL: redis://45.80.129.41:6379
+      REDIS_BACKEND_URL: redis://45.80.129.41:6379
+      MINIO_BUCKET_NAME: video
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      VLM_URL: http://45.80.129.41:8000/v1/chat/completions
+    volumes:
+      - /root/ML/videos:/video
+    networks:
+      - app-network
+    shm_size: 8gb
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  client:
+    image: ml:1.2.5
+    command: uvicorn client:app --port 30001 --host 0.0.0.0
+    environment:
+      # REDIS_BROKER_URL: redis://redis:30379
+      # REDIS_BACKEND_URL: redis://redis:30379
+      REDIS_BROKER_URL: redis://45.80.129.41:6379
+      REDIS_BACKEND_URL: redis://45.80.129.41:6379
+      MINIO_BUCKET_NAME: video
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      VLM_URL: http://45.80.129.41:8000/v1/chat/completions
+    ports:
+      - 30001:30001
+    volumes:
+      - /root/ML/videos:/video
+    networks:
+      - app-network
+
+  # redis:
+  #   image: redis
+  #   ports:
+  #   - 30379:6379
+  #   networks:
+  #     - app-network
+
+  redis-commander:
+    image: rediscommander/redis-commander
+    ports:
+      - 8081:8081
+    environment:
+      # - REDIS_HOSTS=local:redis:6379
+      - REDIS_HOSTS=local:45.80.129.41:6379
+      # - REDIS_PORT=30379
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
