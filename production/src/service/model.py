@@ -67,7 +67,7 @@ class MasterModel:
                 if k == "timestamp":
                     try:
                         float(v)
-                        item_n["time_start"] = v
+                        item_n["time_start"] = str(max(float(v) - 2, 0))
                     except:
                         break
                 elif k == "description":
@@ -75,7 +75,7 @@ class MasterModel:
                 elif k == "duration":
                     try:
                         float(v)
-                        item_n["time_duration"] = v
+                        item_n["time_duration"] = str(max(float(v), 5))
                     except:
                         item_n["time_duration"] = "5"
                 elif k == "confidence":
@@ -133,7 +133,7 @@ class MasterModel:
                 if k == "timestamp":
                     try:
                         float(v)
-                        item_n["time_start"] = v
+                        item_n["time_start"] = str(max(float(v) - 2, 0))
                     except:
                         break
                 elif k == "description":
@@ -141,9 +141,9 @@ class MasterModel:
                 elif k == "duration":
                     try:
                         float(v)
-                        item_n["time_duration"] = v
+                        item_n["time_duration"] = str(max(float(v), 5))
                     except:
-                        item_n["time_duration"] = "3"
+                        item_n["time_duration"] = "5"
                 elif k == "confidence":
                     try:
                         float(v)
